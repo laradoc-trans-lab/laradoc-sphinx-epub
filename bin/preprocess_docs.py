@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
 程式用途
-
-1. 將文件中出現 `/docs/{{version}}/{{chapter}}` 的連結轉換為 `{{chapter}}.md`。
-2. 將文件中出現 ```shell tab=Linux` 的語法修正 (TODO: 未確定 Sphinx 是否支援)。
-3. 下載文件中含有 `<img src="">` 標籤所包含的圖片並儲存於 `output/OEBPS/Images/` 資料夾，
+1. 下載文件中含有 `<img src="">` 標籤所包含的圖片並儲存於 `output/OEBPS/Images/` 資料夾，
    並將連結改為本地路徑。
+2. 將文件中出現 `/docs/{{version}}/{{chapter}}` 的連結轉換為 `{{chapter}}.md`。
+3. 將文件中出現 ```shell tab=Linux` 的語法修正，會將 tab 後面提取出來增加一行粗體敘述於程式碼前。
 4. 最後將 Markdown 文件儲存到指定的輸出目錄 `output/OEBPS/Text/`。
 
 本程式授權採用 MIT License
@@ -78,7 +77,7 @@ def convert_content(source_dir, output_dir):
                     image_filename = "img_" + hashlib.md5(url.encode()).hexdigest()[:10]
 
                 local_image_path = os.path.join(image_output_dir, image_filename)
-                new_image_src = f"_static/{image_filename}"
+                new_image_src = f"_static/laravel/{image_filename}"
                 
                 print(f"  - Found image: {url}")
                 print(f"    - Downloading to: {new_image_src}")
@@ -106,7 +105,21 @@ def convert_content(source_dir, output_dir):
         )
 
         
-        # --- 階段三：寫入處理後的檔案 ---
+        # --- 階段三：處理程式碼區塊 tab ---
+        new_content_lines = []
+        for line in content.splitlines(keepends=True):
+            match = re.match(r"^\s*```(\w+)\s+tab=(.*)", line)
+            if match:
+                language = match.group(1)
+                title = match.group(2).strip()
+                # 修正：移除星號與文字間的空格，並在標題後新增一個空行
+                new_content_lines.append(f"**{title}**\n\n")
+                new_content_lines.append(f"```{language}\n")
+            else:
+                new_content_lines.append(line)
+        content = "".join(new_content_lines)
+        
+        # --- 階段四：寫入處理後的檔案 ---
         with open(output_file_path, 'w', encoding='utf-8') as f:
             f.write(content)
 
