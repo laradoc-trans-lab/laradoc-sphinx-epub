@@ -1,0 +1,14 @@
+services:
+  builder:
+    image: laradoc-sphinx-epub-builder
+    build:
+      context: .
+      # 使用行內定義，就省了 Dockerfile 檔案
+      dockerfile_inline: |
+        FROM sphinxdoc/sphinx:8.2.3
+        COPY requirements.txt .
+        RUN pip install -r requirements.txt
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: bash bin/build.sh

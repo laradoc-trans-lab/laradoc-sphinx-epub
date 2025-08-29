@@ -1,0 +1,6 @@
+.venv
+source
+book
+build
+
+*.log

@@ -1,0 +1,5 @@
+/* 程式碼高亮的區域保留一些空隙比較美觀 */
+div.highlight {
+    padding: 0.2em;
+    margin-bottom: 0.2em;
+}
