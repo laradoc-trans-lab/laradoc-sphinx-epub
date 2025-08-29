@@ -11,14 +11,14 @@ rm -Rf build/grayscale/.buildinfo*
 rm -Rf build/grayscale/.doctrees
 
 echo ">>> Pre processing source files..."
-python3 bin/preprocess_docs.py source book/source
+python3 bin/preprocess_docs.py source book/_source
 
 cd book
 
 echo ">>> Building EPUB (color version) with Sphinx..."
-SPHINX_CUSTOM_CONFIG="color" sphinx-build -E -a -b epub  --conf-dir . source ../build/color
+SPHINX_CUSTOM_CONFIG="color" sphinx-build -E -a -b epub  --conf-dir . _source ../build/color
 
 echo ">>> Building EPUB (grayscalebw version) with Sphinx..."
-SPHINX_CUSTOM_CONFIG="grayscale" sphinx-build -E -a -b epub --conf-dir .  source ../build/grayscale
+SPHINX_CUSTOM_CONFIG="grayscale" sphinx-build -E -a -b epub --conf-dir .  _source ../build/grayscale
 
 echo ">>> Build complete! Check the 'output' directory."
