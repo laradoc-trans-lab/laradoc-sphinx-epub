@@ -62,8 +62,12 @@ def convert_content(source_dir, output_dir):
         # --- 階段一：處理圖片 ---
         # 1. 使用正規表示式尋找所有 <img> 標籤中的 src 網址
         img_urls = re.findall(r'<img[^>]+src="([^"]+)"', content)
+
+        # 2. 如果有找到圖片，才修正未閉合的 img 標籤
+        if img_urls:
+            content = re.sub(r'(<img[^>]*)(?<!/)>', r'\1 />', content)
         
-        # 2. 遍歷所有找到的圖片網址 (使用 set 避免在同一個檔案中重複下載相同的圖片)
+        # 3. 遍歷所有找到的圖片網址 (使用 set 避免在同一個檔案中重複下載相同的圖片)
         for url in set(img_urls):
             # 只處理 https 開頭的外部圖片
             if not url.startswith(('https://')):
