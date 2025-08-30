@@ -44,6 +44,8 @@ exclude_patterns = [
 epub_title = "Laravel 12 文件繁體中文版"
 epub_version = 3.0
 epub_language = 'zh-TW'
+# 將內文中有外部 URL 以註腳方式顯示
+epub_show_urls = 'footnote'
 
 # -- 修正不支援的 Highlighting --
 from pygments.lexers.web import PhpLexer
