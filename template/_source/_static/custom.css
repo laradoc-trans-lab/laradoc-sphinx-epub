@@ -1,0 +1,13 @@
+/* 程式碼高亮的區域保留一些空隙比較美觀 */
+div.highlight {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin-bottom: 0.2em;
+    border-style: solid;
+    border-width: 2px;
+}
+
+code, pre {
+  font-family: "SFMono-Regular", "Roboto Mono", "Noto Sans Mono CJK TC",
+               "Menlo", "Monaco", "Courier New", monospace;
+}
