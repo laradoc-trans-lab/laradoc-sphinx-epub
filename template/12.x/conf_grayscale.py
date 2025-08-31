@@ -10,7 +10,8 @@ pygments_style = 'friendly_grayscale'
 # -- EPUB 輸出參數，這裡指 EPUB3 + 書本是繁體中文 --
 epub_title = "Laravel 12 說明文件-繁體中文黑白高亮版"
 
-epub_css_files = ['custom.css']
+# 原本的 grayscale 並非真正灰階，修正為符合 eink 螢幕特性使字形能以 300PPI 呈現
+epub_css_files = ['custom.css' , 'grayscale-eink.css']
 
 # -- 封面圖檔 --
 epub_cover = ('_static/cover-grayscale.png','')
