@@ -48,14 +48,12 @@ epub_language = 'zh-TW'
 epub_show_urls = 'footnote'
 
 # -- 修正不支援的 Highlighting --
-from pygments.lexers.web import PhpLexer
+from pygments.lexers.web import HtmlPhpLexer
 from pygments.lexers.configs import IniLexer
 from sphinx.highlighting import lexers
 
-# -- 修正 PHP 開頭處沒有 `<?php` 時無高亮效果 --
-lexers['php'] = PhpLexer(startinline=True)
 # -- blade 語法改為 PHP 語法 --
-lexers['blade'] = PhpLexer(startinline=True)
+lexers['blade'] = HtmlPhpLexer()
 # -- env 檔案語法改為 ini 語法 --
 lexers['env'] = IniLexer()
 

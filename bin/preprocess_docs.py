@@ -4,8 +4,9 @@
 1. 下載文件中含有 `<img src="">` 標籤所包含的圖片並儲存於 `output/OEBPS/Images/` 資料夾，
    並將連結改為本地路徑。
 2. 將文件中出現 `/docs/{{version}}/{{chapter}}` 的連結轉換為 `{{chapter}}.md`。
-3. 將文件中出現 ```shell tab=Linux` 的語法修正，會將 tab 後面提取出來增加一行粗體敘述於程式碼前。
-4. 最後將 Markdown 文件儲存到指定的輸出目錄 `output/OEBPS/Text/`。
+3. 將文件中出現 "```php" 區塊中程式碼第一行未包含 "<?php" 修正為 "```html+php"。
+4. 將文件中出現 "```shell tab=Linux" 的語法修正，會將 tab 後面提取出來增加一行粗體敘述於程式碼前。
+5. 最後將 Markdown 文件儲存到指定的輸出目錄 `output/OEBPS/Text/`。
 
 本程式授權採用 MIT License
 Copyright (c) 2025 Pigo Chu
@@ -108,6 +109,25 @@ def convert_content(source_dir, output_dir):
             content
         )
 
+
+        # --- 新增階段：修正 PHP 程式碼區塊標籤 ---
+        # 3. 將文件中出現 "```php" 區塊中程式碼第一行未包含 "<?php" 修正為 "```html+php"。
+        def fix_php_blocks(match):
+            # 提取程式碼區塊的內容
+            code_block_content = match.group(1)
+
+            # 尋找第一個非空行
+            first_code_line = next((line for line in code_block_content.splitlines() if line.strip()), None)
+
+            # 如果找不到非空行，或第一個非空行不是以 "<?php" 開頭
+            if first_code_line is None or not first_code_line.strip().startswith("<?php"):
+                # 將 ```php 替換為 ```html+php
+                return f"```html+php{code_block_content}```"
+            
+            # 否則，保持原樣
+            return match.group(0)
+
+        content = re.sub(r"```php(.*?)```", fix_php_blocks, content, flags=re.DOTALL)
         
         # --- 階段三：處理程式碼區塊 tab ---
         new_content_lines = []
