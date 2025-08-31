@@ -54,15 +54,16 @@ from pygments.lexers.configs import BashLexer
 from sphinx.highlighting import lexers
 
 # -- blade 語法改為 PHP 語法 --
-lexers['blade'] = HtmlPhpLexer()
+lexers['blade'] = HtmlPhpLexer(linenos=True)
 # -- env 檔案語法改為 ini 語法 --
-lexers['env'] = IniLexer()
+lexers['env'] = IniLexer(linenos=True)
 # -- shell 語法改為 bash 語法 --
-lexers['shell'] = BashLexer()
+lexers['shell'] = BashLexer(linenos=True)
 
 # -- Path setup --------------------------------------------------------------
 # Path to custom static files (CSS, images, etc.)
 html_static_path = ['_source/_static']
+html_codeblock_linenos_style = 'inline'
 
 epub_tocdepth = 2
 
