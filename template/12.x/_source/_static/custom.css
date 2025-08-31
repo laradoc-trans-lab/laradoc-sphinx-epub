@@ -1,13 +1,19 @@
 /* 程式碼高亮的區域保留一些空隙比較美觀 */
 div.highlight {
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+    padding: 10px;
     margin-bottom: 0.2em;
     border-style: solid;
-    border-width: 2px;
+    border-width: 1px;
+    font-size: 100%;
 }
 
-code, pre {
-  font-family: "SFMono-Regular", "Roboto Mono", "Noto Sans Mono CJK TC",
-               "Menlo", "Monaco", "Courier New", monospace;
+body {
+  background-color: #FFFFFF;
+  color: #000000;
+  font-family: "微軟正黑體" , "Microsoft JhengHei", "SFMono-Regular", "Roboto Mono", "Noto Sans Mono CJK TC" , "華康黑體";
+}
+
+code,pre {
+  font-family: "Consolas", "Menlo", "Monaco", "Courier New",monospace,"微軟正黑體" , "Microsoft JhengHei", "SFMono-Regular", "Roboto Mono", "Noto Sans Mono CJK TC" , "華康黑體";
+  line-height: 100%;
 }
