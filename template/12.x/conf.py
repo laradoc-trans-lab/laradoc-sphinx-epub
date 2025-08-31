@@ -48,7 +48,7 @@ epub_language = 'zh-TW'
 epub_show_urls = 'footnote'
 
 # -- 修正不支援的 Highlighting --
-from pygments.lexers.web import HtmlPhpLexer
+from pygments.lexers.templates import HtmlPhpLexer
 from pygments.lexers.configs import IniLexer
 from sphinx.highlighting import lexers
 
