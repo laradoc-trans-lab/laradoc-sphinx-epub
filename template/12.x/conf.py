@@ -52,9 +52,10 @@ from pygments.lexers.web import PhpLexer
 from pygments.lexers.configs import IniLexer
 from sphinx.highlighting import lexers
 
+# -- 修正 PHP 開頭處沒有 `<?php` 時無高亮效果 --
+lexers['php'] = PhpLexer(startinline=True)
 # -- blade 語法改為 PHP 語法 --
 lexers['blade'] = PhpLexer(startinline=True)
-
 # -- env 檔案語法改為 ini 語法 --
 lexers['env'] = IniLexer()
 
