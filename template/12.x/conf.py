@@ -50,12 +50,15 @@ epub_show_urls = 'footnote'
 # -- 修正不支援的 Highlighting --
 from pygments.lexers.templates import HtmlPhpLexer
 from pygments.lexers.configs import IniLexer
+from pygments.lexers.configs import BashLexer
 from sphinx.highlighting import lexers
 
 # -- blade 語法改為 PHP 語法 --
 lexers['blade'] = HtmlPhpLexer()
 # -- env 檔案語法改為 ini 語法 --
 lexers['env'] = IniLexer()
+# -- shell 語法改為 bash 語法 --
+lexers['shell'] = BashLexer()
 
 # -- Path setup --------------------------------------------------------------
 # Path to custom static files (CSS, images, etc.)
