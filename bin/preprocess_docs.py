@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
 程式用途
-1. 下載文件中含有 `<img src="">` 標籤所包含的圖片並儲存於 `output/OEBPS/Images/` 資料夾，
+1. 下載文件中含有 `<img src="">` 標籤所包含的圖片並儲存於 `book/_source/_static/laravel` 資料夾，
    並將連結改為本地路徑。
 2. 將文件中出現 `/docs/{{version}}/{{chapter}}` 的連結轉換為 `{{chapter}}.md`。
 3. 將文件中出現 "```php" 區塊中程式碼第一行未包含 "<?php" 修正為 "```html+php"。
 4. 將文件中出現 "```shell tab=Linux" 的語法修正，會將 tab 後面提取出來增加一行粗體敘述於程式碼前。
-5. 最後將 Markdown 文件儲存到指定的輸出目錄 `output/OEBPS/Text/`。
+5. 最後將 Markdown 文件儲存到指定的輸出目錄 `book/_source`。
 
 本程式授權採用 MIT License
 Copyright (c) 2025 Pigo Chu
