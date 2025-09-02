@@ -4,11 +4,13 @@
 # 詳細參考 https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 # -- Project information -----------------------------------------------------
+import datetime
 
-copyright = "2025, Laravel Contributors; translated by laradoc-trans-lab"
-author = '2025, Laravel contributors; translated by laradoc-trans-lab'
+copyright = "2025, Laravel Contributors"
+author = 'Laravel contributors'
 version = '12.x'
-release = '12.x-20250829'
+# 動態生成 release (格式：12.x-%Y%m%d%H%M)
+release = f"{version}-{datetime.datetime.now().strftime('%Y%m%d%H%M')}"
 
 # -- General configuration ---------------------------------------------------
 # Using myst_parser for modern Markdown support in Sphinx
@@ -46,6 +48,8 @@ epub_version = 3.0
 epub_language = 'zh-TW'
 # 將內文中有外部 URL 以註腳方式顯示
 epub_show_urls = 'footnote'
+epub_publisher = 'laradoc-trans'
+epub_contributor = 'laradoc-trans'
 
 # -- 修正不支援的 Highlighting --
 from pygments.lexers.templates import HtmlPhpLexer
