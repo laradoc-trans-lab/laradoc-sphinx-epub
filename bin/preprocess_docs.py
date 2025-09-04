@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 程式用途
-1. 下載文件中含有 `<img src="">` 標籤所包含的圖片並儲存於 `book/_source/_static/laravel` 資料夾，
+1. 下載文件中含有 `<img src=\"\">` 標籤所包含的圖片並儲存於 `book/_source/_static/laravel` 資料夾，
    並將連結改為本地路徑。
 2. 將文件中出現 `/docs/{{version}}/{{chapter}}` 的連結轉換為 `{{chapter}}.md`。
-3. 將文件中出現 "```php" 區塊中程式碼第一行未包含 "<?php" 修正為 "```html+php"。
+3. 將文件中出現 "```php" 區塊中內的程式碼檢查整段是否有出現 `<?php` , 如果沒有出現，則插入一行 `<?php` 於區塊的第一行。
 4. 將文件中出現 "```shell tab=Linux" 的語法修正，會將 tab 後面提取出來增加一行粗體敘述於程式碼前。
 5. 最後將 Markdown 文件儲存到指定的輸出目錄 `book/_source`。
 
@@ -31,7 +31,6 @@ def download_image(url, save_path):
     except requests.exceptions.RequestException as e:
         print(f"    - Error downloading {url}: {e}")
         return False
-
 
 def convert_content(source_dir, output_dir):
     """
@@ -62,7 +61,7 @@ def convert_content(source_dir, output_dir):
 
         # --- 階段一：處理圖片 ---
         # 1. 使用正規表示式尋找所有 <img> 標籤中的 src 網址
-        img_urls = re.findall(r'<img[^>]+src="([^"]+)"', content)
+        img_urls = re.findall(r'<img[^>]+src=\"([^\"]+)\"', content)
 
         # 2. 如果有找到圖片，才修正未閉合的 img 標籤
         if img_urls:
@@ -111,23 +110,22 @@ def convert_content(source_dir, output_dir):
 
 
         # --- 新增階段：修正 PHP 程式碼區塊標籤 ---
-        # 3. 將文件中出現 "```php" 區塊中程式碼第一行未包含 "<?php" 修正為 "```html+php"。
-        def fix_php_blocks(match):
-            # 提取程式碼區塊的內容
+        # 3. 將文件中出現 "```php" 區塊中內的程式碼檢查整段是否有出現 `<?php` , 如果沒有出現，則插入一行 `<?php` 於區塊的第一行。
+        def ensure_php_tag(match):
+            # group(1) is the content between ```php and ```
             code_block_content = match.group(1)
 
-            # 尋找第一個非空行
-            first_code_line = next((line for line in code_block_content.splitlines() if line.strip()), None)
-
-            # 如果找不到非空行，或第一個非空行不是以 "<?php" 開頭
-            if first_code_line is None or not first_code_line.strip().startswith("<?php"):
-                # 將 ```php 替換為 ```html+php
-                return f"```html+php{code_block_content}```"
+            if '<?php' not in code_block_content:
+                # Strip leading whitespace/newlines from the original content
+                # to avoid extra blank lines.
+                cleaned_content = code_block_content.lstrip()
+                # Reconstruct the block with the tag on its own line.
+                return f"```php\n<?php\n{cleaned_content}```"
             
-            # 否則，保持原樣
+            # If the tag exists, return the original block to avoid any changes.
             return match.group(0)
 
-        content = re.sub(r"```php(.*?)```", fix_php_blocks, content, flags=re.DOTALL)
+        content = re.sub(r"```php(.*?)```", ensure_php_tag, content, flags=re.DOTALL)
         
         # --- 階段三：處理程式碼區塊 tab ---
         new_content_lines = []
