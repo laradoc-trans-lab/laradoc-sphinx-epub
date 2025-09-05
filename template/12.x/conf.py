@@ -52,6 +52,7 @@ epub_publisher = 'laradoc-trans'
 epub_contributor = 'laradoc-trans'
 
 # -- 修正不支援的 Highlighting --
+from pygments.lexers.templates import PhpLexer
 from pygments.lexers.templates import HtmlPhpLexer
 from pygments.lexers.configs import IniLexer
 from pygments.lexers.configs import BashLexer
@@ -63,6 +64,9 @@ lexers['blade'] = HtmlPhpLexer(linenos=True)
 lexers['env'] = IniLexer(linenos=True)
 # -- shell 語法改為 bash 語法 --
 lexers['shell'] = BashLexer(linenos=True)
+
+lexers['php-line'] = PhpLexer(startinline=True)
+
 
 # -- Path setup --------------------------------------------------------------
 # Path to custom static files (CSS, images, etc.)
