@@ -4,9 +4,9 @@
 1. 下載文件中含有 `<img src="">` 標籤所包含的圖片並儲存於 `book/_source/_static/laravel` 資料夾，
    並將連結改為本地路徑。
 2. 將文件中出現 `/docs/{{version}}/{{chapter}}` 的連結轉換為 `{{chapter}}.md`。
-3. 將 Laravel Doc 特有的 diff 語法轉換為 Sphinx 的 diff 語法。
-4. 將文件中出現 "```php" 區塊中內的程式碼檢查整段是否有出現 `<?php` , 如果沒有出現，則改為 `<?php-inline`。
-5. 將文件中出現 "```shell tab=Linux" 的語法修正，會將 tab 後面提取出來增加一行粗體敘述於程式碼前。
+3. 將文件中出現 "```php" 區塊中內的程式碼檢查整段是否有出現 `<?php` , 如果沒有出現，則改為 `<?php-inline`。
+4. 將文件中出現 "```shell tab=Linux" 的語法修正，會將 tab 後面提取出來增加一行粗體敘述於程式碼前。
+5. 將 Laravel Doc 特有的 diff 語法轉換為 Sphinx 的 diff 語法。
 6. 最後將 Markdown 文件儲存到指定的輸出目錄 `book/_source`。
 
 本程式授權採用 MIT License
@@ -38,14 +38,27 @@ def process_laravel_diff_blocks(content):
     def replacer(match):
         # group(1) 是 ```html 與 ``` 之間的內容
         block_content = match.group(1)
-        # 檢查區塊內是否含有目標註解
-        if '<!-- [tl! remove] -->' in block_content or '<!-- [tl! add] -->' in block_content:
+
+        # 逐行檢查，確認是否符合轉換條件
+        should_convert = False
+        for line in block_content.splitlines():
+            # 移除行首和行尾的空白
+            stripped_line = line.strip()
+            # 檢查行首是否為 '+' 或 '-'，且該行是否包含特定註解
+            if (stripped_line.startswith('+') or stripped_line.startswith('-')) and \
+               ('<!-- [tl! add] -->' in stripped_line or '<!-- [tl! remove] -->' in stripped_line):
+                should_convert = True
+                break  # 找到一行符合就足以觸發轉換，中斷迴圈
+
+        if should_convert:
             # 移除註解
             modified_content = block_content.replace('<!-- [tl! remove] -->', '')
             modified_content = modified_content.replace('<!-- [tl! add] -->', '')
             # 將 ```html 改為 ```diff
+            # 注意：保留原始的換行和縮排，僅替換語言標籤和移除註解
             return f"```diff{modified_content}```"
-        # 如果沒有找到標記，回傳原來的區塊
+        
+        # 如果沒有找到符合條件的行，回傳原來的區塊
         return match.group(0)
 
     # 使用 re.DOTALL 讓 `.` 可以匹配換行符
@@ -132,6 +145,8 @@ def convert_content(source_dir, output_dir):
         # --- 階段六：寫入處理後的檔案 ---
         with open(output_file_path, 'w', encoding='utf-8') as f:
             f.write(content)
+
+        processed_count += 1
 
     print("\nConversion completed!")
     print(f"Total files processed: {processed_count}")
