@@ -78,7 +78,6 @@ epub_tocdepth = 2
 
 
 # 根據環境變數決定載入哪個設定檔以覆蓋基本設定
-import sys
 import os
 
 
