@@ -7,6 +7,15 @@ div.highlight {
     font-size: 100%;
 }
 
+/* 針對 [tl! remove] 擴充的刪除樣式 */
+div.highlight .dll {
+  background-color: #702020;
+  text-decoration-line: line-through;
+  text-decoration-style: solid;   /* 線條樣式: solid, double, dotted, dashed, wavy */
+  text-decoration-color: #904040;    /* 線條顏色 */
+  text-decoration-thickness: 1px;
+}
+
 body {
   background-color: #FFFFFF;
   color: #000000;
