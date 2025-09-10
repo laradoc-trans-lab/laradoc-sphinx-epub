@@ -1,3 +1,10 @@
+import os
+import sys
+from pathlib import Path
+
+# Add the project root to sys.path to find sphinx_extensions
+sys.path.insert(0, str(Path(__file__).parent / '..' / 'sphinx_extensions'))
+
 # 這是基礎設定檔，conf-color.py 與 conf-bw.py 會引用此檔案並覆寫部分設定
 
 # conf.py
@@ -16,7 +23,10 @@ release = f"{version}-{datetime.datetime.now().strftime('%Y%m%d%H%M')}"
 # Using myst_parser for modern Markdown support in Sphinx
 extensions = [
     'myst_parser',
+    'torchlight',
 ]
+
+
 
 # Define source file suffixes, including Markdown
 source_suffix = {
