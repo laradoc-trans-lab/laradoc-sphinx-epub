@@ -9,6 +9,15 @@
 
 */
 
+/* 針對 [tl! remove] 擴充的刪除樣式 */
+div.highlight .dll {
+  background-color: #AAA;
+  text-decoration-line: line-through;
+  text-decoration-style: solid;   /* 線條樣式: solid, double, dotted, dashed, wavy */
+  text-decoration-color: black;    /* 線條顏色 */
+  text-decoration-thickness: 1px;
+}
+
 a:link {
   color: #000000;
 }
