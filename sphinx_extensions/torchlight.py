@@ -26,7 +26,7 @@ class TorchlightHtmlFormatter(HtmlFormatter):
                 
                 # Pattern to find [tl! add|remove] tags, accounting for Pygments' spans
                 # Modified to capture and remove the '//' prefix as well
-                tag_pattern = r'(//\s*)?[\\\[]tl!\\s*(?P<type>add|remove)(?::(?P<subtype>start|end))?[\\]]'
+                tag_pattern = r'(?P<prefix>//\s*)?\[tl!\s*(?P<type>add|remove)(?::(?P<subtype>start|end))?\]'
                 
                 tag_match = re.search(tag_pattern, processed_value)
                 
