@@ -14,7 +14,7 @@ try:
 except ImportError as e:
     print(f"警告: 無法從 conf_common 預先載入變數. {e}")
     # 定義一個最小集合以防萬一
-    project, author, epub_author,epub_title, version, release,epub_build_date,epub_contributor = [''] * 8
+    project, author, epub_author,epub_title, version, release,epub_build_date,epub_contributor,epub_contributor_url = [''] * 9
 
 
 # ----------------------------------------------------------------------------
@@ -45,6 +45,7 @@ html_context = {
     'epub_title': epub_title,
     'epub_build_date': epub_build_date,
     'epub_contributor': epub_contributor,
+    'epub_contributor_url' : epub_contributor_url,
     'book_title': project,
     'book_version': version,
     'book_release': release,

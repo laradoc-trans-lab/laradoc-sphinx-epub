@@ -61,10 +61,11 @@ epub_title = "Laravel 12 文件繁體中文版"
 epub_version = 3.0
 epub_language = 'zh-TW'
 epub_show_urls = 'footnote' # 外部連結以註腳顯示
-epub_publisher = 'laradoc-trans'
-epub_contributor = 'laradoc-trans'
+epub_publisher = 'laradoc-trans-lab'
+epub_contributor = 'laradoc-trans-lab'
+epub_contributor_url = 'https://github.com/laradoc-trans-lab'
 epub_tocdepth = 2
-epub_build_date = f"{datetime.datetime.now().strftime('%Y%m%d%H%M')}" # 建置日期
+epub_build_date = f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}" # 建置日期
 
 
 # -- 修正不支援的 Highlighting --
