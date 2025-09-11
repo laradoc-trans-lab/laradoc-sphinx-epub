@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 class TorchlightHtmlFormatter(HtmlFormatter):
     def __init__(self, **options):
+        options['linenos'] = 'inline'
         super().__init__(**options)
         self.options['nowrap'] = True # Ensure no extra wrapping by base class
         logger.debug("[torchlight] TorchlightHtmlFormatter __init__ called!")
