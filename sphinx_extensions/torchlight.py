@@ -22,6 +22,71 @@ class TorchlightHtmlFormatter(HtmlFormatter):
         # Call the parent's wrap method to get the default Pygments output
         for type, value in super().wrap(source):
             if type == 1: # This type typically indicates a line of code
+
+                # Replace spaces inside and after the linenos span
+                # e.g. <span class="linenos"> 1</span>  foo
+                # -> <span class="linenos">&#160;1</span>&#160;&#160;foo
+
+                # Handle spaces inside the linenos span, before the number
+                value = re.sub(
+                    r'(<span class="linenos">)( +)(\d+</span>)',
+                    lambda m: m.group(1) + ''.join(['&#160;' for char in m.group(2)]) + m.group(3),
+                    value
+                )
+
+                # Handle spaces after the linenos span
+                value = re.sub(
+                    r'(<span class="linenos">.*?</span>)( +)',
+                    lambda m: m.group(1) + ''.join(['&#160;' for char in m.group(2)]),
+                    value
+                )
+
+                # Handle spaces inside pygments' whitespace-only spans
+                value = re.sub(
+                    r'(<span class="w">)( +)(</span>)',
+                    lambda m: m.group(1) + ''.join(['&#160;' for char in m.group(2)]) + m.group(3),
+                    value
+                )
+
+                # Handle leading spaces in sd spans
+                value = re.sub(
+                    r'(<span class="sd">)( +)',
+                    lambda m: m.group(1) + ''.join(['&#160;' for char in m.group(2)]),
+                    value
+                )
+
+                
+
+                # --- Wrap line and code in spans, as per user request ---
+                # 1. Separate newline
+                newline_suffix = ''
+                if value.endswith('\n'):
+                    value = value[:-1]
+                    newline_suffix = '\n'
+
+                # 2. Separate line number span from the rest of the code
+                linenos_span = ''
+                code_part = ''
+                match = re.match(r'(<span class="linenos">.*?</span>)(.*)', value)
+                if match:
+                    linenos_span = match.group(1)
+                    code_part = match.group(2)
+                else:
+                    # Fallback for lines without a line number
+                    code_part = value
+                
+                # 3. Wrap the code part in its own span, handling empty/whitespace-only cases
+                if not code_part.strip():
+                    wrapped_code = '<span class="code empty">&#10;</span>'
+                else:
+                    wrapped_code = f'<span class="code">{code_part}</span>'
+                
+                # 4. Assemble the new line structure
+                value = f'<span class="line">{linenos_span}{wrapped_code}</span>'
+
+                # 5. Add the newline back on for the next stage
+                value += newline_suffix
+
                 processed_value = value
                 line_highlight_class = None
                 
@@ -100,13 +165,18 @@ class TorchlightHtmlFormatter(HtmlFormatter):
                         newline_suffix = '\n'
                     else:
                         newline_suffix = ''
+                    ''
 
                     yield type, f'<span class="{line_highlight_class}">{processed_value}</span>{newline_suffix}'
                     logger.debug(f"[torchlight] Wrapped line with {line_highlight_class}. Final HTML: {processed_value.strip()}")
                 else:
                     yield type, value # Yield original value (with newline) if no tag or no active block
             else:
-                yield type, value # Yield other types (e.g., 'doc') unchanged
+
+                if value.strip() == '<pre><span></span>':
+                    yield type, '<pre>\n'
+                else:
+                    yield type, value # Yield other types (e.g., 'doc') unchanged
 
 def setup(app):
     logger.info("[torchlight] Torchlight Sphinx extension loaded!")

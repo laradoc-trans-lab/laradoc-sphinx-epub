@@ -4,22 +4,84 @@ div.highlight {
     margin-bottom: 0.2em;
     border-style: solid;
     border-width: 1px;
-    font-size: 100%;
+    font-size: 90%;
+}
+
+div.highlight pre {
+  white-space: nowrap;
+  word-wrap: normal;
+}
+
+
+div.highlight .line {
+  display: block;
+  white-space: nowrap;
+}
+
+
+div.highlight .linenos {
+  clear: both;
+  float: left;
+  display: block;
+  /* display: inline-block; */
+  /* vertical-align: top; */
+  color: #a0a0a0;
+  width: 30px;
+  height: 16px;
+  min-width: 30px;
+  padding: 0;
+  margin: 0;
+
+  user-select: none;   /* 行號不能被滑鼠選取 */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+/* Hyread Hack : 如果是空的元素沒有高度會跑位 */
+div.highlight .empty {
+  height: 16px;
+  width: 16px;
+}
+
+/* 設定斷行 */
+div.highlight .code
+{
+  display: block;
+  min-height: 16px;
+  padding: 0px;
+  margin: 0 0 0 35px;
+  margin-left: 35px;
+
+  white-space: pre-line;
+  word-break: break-word;
+  /* vertical-align: top; */
+  text-align: left;
+}
+
+
+/* 可允許亂斷 */
+div.highlight .s1,
+div.highlight .s2
+{
+  word-break: break-all;
+}
+
+
+div.highlight .hll .code {
+  background-color: #49483e;
 }
 
 /* 針對 [tl! remove] 擴充的刪除樣式 */
-div.highlight .dll {
+div.highlight .dll .code {
+  text-decoration: line-through solid white  1px;
   background-color: #702020;
-  text-decoration-line: line-through;
-  text-decoration-style: solid;   /* 線條樣式: solid, double, dotted, dashed, wavy */
-  text-decoration-color: #904040;    /* 線條顏色 */
-  text-decoration-thickness: 1px;
 }
 
 body {
   background-color: #FFFFFF;
   color: #000000;
   font-family: "微軟正黑體" , "Microsoft JhengHei", "SFMono-Regular", "Roboto Mono", "Noto Sans Mono CJK TC" , "華康黑體";
+
 }
 
 code,pre {
