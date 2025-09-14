@@ -3,7 +3,7 @@
 ```{toctree}
 :maxdepth: 1
 
-cashier-stripe
+billing
 cashier-paddle
 dusk
 envoy
