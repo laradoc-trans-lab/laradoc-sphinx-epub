@@ -6,14 +6,14 @@ from conf_common import *
 project = 'Laravel-12-Documentationc-zh_TW-color'
 
 # -- 支援的樣式可參考 https://pygments.org/styles/ --
-pygments_style = 'monokai'
+pygments_style = 'xcode'
 
 # -- EPUB 輸出參數，這裡指 EPUB3 + 書本是繁體中文 --
 epub_title = "Laravel 12 說明文件-繁體中文彩色高亮版"
 
 epub_author = author
 
-epub_css_files = ['custom.css']
+epub_css_files = ['custom-color.css']
 
 # -- 封面圖檔 --
 epub_cover = ('_static/cover-color.png','cover.html')
