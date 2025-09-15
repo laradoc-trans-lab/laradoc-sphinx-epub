@@ -74,80 +74,53 @@ class TorchlightHtmlFormatter(HtmlFormatter):
                 else:
                     # Fallback for lines without a line number
                     code_part = value
-                
-                # 3. Wrap the code part in its own span, handling empty/whitespace-only cases
-                if not code_part.strip():
-                    wrapped_code = '<span class="code empty">&#10;</span>'
-                else:
-                    wrapped_code = f'<span class="code">{code_part}</span>'
-                
-                # 4. Assemble the new line structure
-                value = f'<span class="line">{linenos_span}{wrapped_code}</span>'
 
-                # 5. Add the newline back on for the next stage
-                value += newline_suffix
-
-                processed_value = value
+                # 3. Determine highlight class and clean tags from code_part
                 line_highlight_class = None
                 
                 # Pattern to find [tl! add|remove] tags, accounting for Pygments' spans
-                # Modified to capture and remove the '//' prefix as well
                 tag_pattern = r'(?P<prefix>//\s*)?\[tl!\s*(?P<type>add|remove)(?::(?P<subtype>start|end))?\]'
                 
-                tag_match = re.search(tag_pattern, processed_value)
+                tag_match = re.search(tag_pattern, code_part)
                 
                 if tag_match:
                     tag_type = tag_match.group('type')
                     tag_subtype = tag_match.group('subtype')
                     
                     logger.debug(f"[torchlight] Found tag: {tag_match.group(0)}. Type: {tag_type}, Subtype: {tag_subtype}")
-                    logger.debug(f"[torchlight] Before replacement (group 0): '{tag_match.group(0)}'")
-                    logger.debug(f"[torchlight] Before replacement (processed_value): '{processed_value.strip()}'")
 
                     if tag_type == 'add':
-                        # --- Handle 'add' tags ---
-                        if tag_subtype is None:  # Single line tag
+                        if tag_subtype is None:
                             line_highlight_class = "hll"
                         elif tag_subtype == 'start':
                             self.in_add_block = True
-                            line_highlight_class = "hll"  # Highlight the start line itself
+                            line_highlight_class = "hll"
                             logger.debug(f"[torchlight] Started add block.")
                         elif tag_subtype == 'end':
-                            if self.in_add_block:  # Highlight the end line if a block was active
+                            if self.in_add_block:
                                 line_highlight_class = "hll"
                             self.in_add_block = False
                             logger.debug(f"[torchlight] Ended add block.")
                     
                     elif tag_type == 'remove':
-                        # --- Handle 'remove' tags ---
-                        if tag_subtype is None:  # Single line tag
+                        if tag_subtype is None:
                             line_highlight_class = "dll"
                         elif tag_subtype == 'start':
                             self.in_remove_block = True
                             line_highlight_class = "dll"
                             logger.debug(f"[torchlight] Started remove block.")
                         elif tag_subtype == 'end':
-                            if self.in_remove_block:  # Highlight the end line if a block was active
+                            if self.in_remove_block:
                                 line_highlight_class = "dll"
                             self.in_remove_block = False
                             logger.debug(f"[torchlight] Ended remove block.")
 
-                    # --- Remove the [tl! ...] tag and its '//' prefix from the processed_value ---
-                    # Replace the entire matched tag (including the optional '//' prefix) with an empty string
-                    processed_value = processed_value.replace(tag_match.group(0), '')
-                    
-                    # Clean up any empty comment spans that might be left behind
-                    # This regex is more specific to Pygments' empty comment spans
-                    processed_value = re.sub(r'<span class="c[0-9]">\s*</span>', '', processed_value)
-                    logger.debug(f"[torchlight] After replacement (processed_value): '{processed_value.strip()}'")
-                    
-                    # Keep these commented out for now, as they caused XHTML validation issues
-                    # processed_value = re.sub(r'<span class="c[0-9]">\\s*</span>', '', processed_value)
-                    # processed_value = re.sub(r'<--\s*-->', '', processed_value) # For HTML comments
-                    
-                    logger.debug(f"[torchlight] Tag removed. Processed value after removal: {processed_value.strip()}")
-                
-                # --- Apply highlighting based on current state (for ranges) ---
+                    # Remove the tag and clean up leftover spans
+                    code_part = code_part.replace(tag_match.group(0), '')
+                    code_part = re.sub(r'<span class="c[0-9]">\s*</span>', '', code_part)
+                    logger.debug(f"[torchlight] Tag removed. Code part after removal: {code_part.strip()}")
+
+                # Apply highlighting based on active block state
                 elif self.in_add_block:
                     line_highlight_class = "hll"
                     logger.debug(f"[torchlight] Applying hll due to active add block.")
@@ -155,22 +128,23 @@ class TorchlightHtmlFormatter(HtmlFormatter):
                     line_highlight_class = "dll"
                     logger.debug(f"[torchlight] Applying dll due to active remove block.")
 
-                # --- Apply highlighting and yield ---
-                if line_highlight_class:
-                    # The 'value' from super().wrap(source) already contains the newline.
-                    # We need to remove the newline from processed_value before wrapping,
-                    # and then add it back after the span.
-                    if processed_value.endswith('\n'):
-                        processed_value = processed_value[:-1]
-                        newline_suffix = '\n'
-                    else:
-                        newline_suffix = ''
-                    ''
-
-                    yield type, f'<span class="{line_highlight_class}">{processed_value}</span>{newline_suffix}'
-                    logger.debug(f"[torchlight] Wrapped line with {line_highlight_class}. Final HTML: {processed_value.strip()}")
+                # 4. Wrap the code part in its own span
+                if not code_part.strip():
+                    wrapped_code = '<span class="code empty">&#10;</span>'
+                    # wrapped_code = '<span class="code empty"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" />&#10;</span>'
                 else:
-                    yield type, value # Yield original value (with newline) if no tag or no active block
+                    wrapped_code = f'<span class="code">{code_part}</span>'
+                
+                # 5. Assemble the new line structure with combined classes
+                final_line_class = "line"
+                if line_highlight_class:
+                    final_line_class += f" {line_highlight_class}"
+                
+                value = f'<span class="{final_line_class}">{linenos_span}{wrapped_code}</span>'
+
+                # 6. Add the newline back and yield
+                value += newline_suffix
+                yield type, value
             else:
 
                 if value.strip() == '<pre><span></span>':
