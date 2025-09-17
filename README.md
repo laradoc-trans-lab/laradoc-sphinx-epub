@@ -5,18 +5,19 @@ Laravel 官方文件的寫法若直接用 Sphinx 轉換成 EPUB 會遇到很多�
 1. "```shell tab=Linux " 這種標籤效果，好像各轉換工具沒辦法直接處理好。
 2. 文件中 Markdown 使用 `<img>` 引用外部圖片，需下載回來包在 epub。
 3. 文件中 Markdown 使用 `<img>` 沒有正確的結束語法，因此無法通過 XHTML 驗證。
-3. 程式碼區塊使用的語言不被認得，例如 `blade` , 這都要額外設定修正。
+4. 程式碼區塊使用的語言不被認得，例如 `blade` , 這都要額外設定修正。
 
 為了解決上述問題，這邊提供了修正程式來解決這問題，且將轉換過程需要的設定都撰寫成樣板，方便日後使用。
 
 ## 專案目錄結構介紹
 
 * `bin/preprocess_docs.py` : 可用來修復 Markdown 內的各種問題，包含自動下載圖片存放於本地端。
+* `bin/gen_index.py` : 用於動態產生目錄檔案的程式，主要依據 `documention.md` 內容產生。
 * `bin/build.sh` : 簡單的 bash 以執行 `preprocess_docs.py` 與 `sphinx-build` 建立 epub 檔案。
-* `template` : 現成的樣板，目前只提供 `template/12.x` 可直接用於轉換 `Laravel 12.x` 說明文件，以後會陸續增加其他版本，目前的樣板有設定好可以轉換為兩種 epub 版本，分別為彩色高亮版與灰階高亮版。
-* `source` : 空目錄，轉換前需要準備好所有 Markdown 未修復的原始檔案。
-* `book` : 用於準備好要轉換的檔案所需檔案，包含修正好的 Markdown file , 本地端圖片，Sphinx 相關設定檔。
-* `build` : 輸出為 epub 時，會將所有檔案儲存於此。
+* `template` : 現成的樣板。
+* `sphinx_extension` : 目前只有一個 `torchlight.py` 主要用於增強 `Pygments` 產生的結構。
+* `pygments_styles` : 目前只有一個 `grayscale.py`，主要用於產生適合 `黑白 E-INK` 螢幕的 css。
+
 
 ## 環境需求
 
@@ -40,30 +41,40 @@ pip install sphinx sphinx-rtd-theme recommonmark
 
 ## 使用現成的樣板以 Sphinx 轉換為 EPUB
 
-一開始要先準備 Laravel 原始的 Markdown , [這裡有提供](https://github.com/laradoc-trans-lab/laravel_docs-zh_TW)，其實本專案其實也可以用來轉換 Laravel 官方的英文版本啦，接下來就依照步驟將轉換的環境建置好:
+1. 將 `template` 整份複製為 `workspace`
+    ```bash
+    cp -Rf template workspace
+    ```
+2. 將 Laravel 文件以 git clone 至 `workspace` 的 `source`。
+    ```bash
+    cd workspace
+    git clone https://github.com/laradoc-trans-lab/laravel_docs-zh_TW.git ./source
+    cd ..
+    ```
+3. 如有需要可以修改 `workspace/conf.py`，設定檔都有中文註解了。
 
-1. 將文件的所有 Markdown 檔案 \(*.md\) 複製到 `source` 目錄下。
-2. 將 `template/12.x` 內的檔案複製到 `book` 目錄下。
-3. 如有需要可以修改 `book` 下的 `conf.py` ,`conf_color.py` , `conf_graysacle.py`，設定檔都有中文註解了。
+> 注意，`workspace/source` 一定要是一個 git 倉庫，且有各版本的分支。
 
-接下來就可以進行轉換了
+接下來就可以進行轉換了 , 假設要轉換 12.x 的版本
 
 若環境有 `docker` 執行以下命令:
 
 ```bash
-docker compose run -u $UID:$GID --rm builder
+docker compose run -u $UID:$GID --rm builder 12.x
 ```
 
 環境沒有 `docker` 執行以下命令:
 
 ```bash
-bin/build.sh
+bin/build.sh 12.x
 ```
 
 就這麼簡單，所有 Markdwon 修正與轉換為 epub 都會依照現有的目錄結構自動完成，轉換過程會有一些紅字 WARNING 不用館，如果轉換成功結束，應該可以看到幾個變化
 
-* `book/_source` 目錄會有所有修正好的 Markdown 檔案。
-* `build` 目錄會有 `color` 與 `grayscale` 分別是轉成兩種類型的 epub ，你要的 epub 檔案就在裡面。
+* `workspace/source`: 這是原始文件的 git repo，此時分支應該是切換到建置 epub 時的分支。
+* `workspace/preprocess`: 預處理的檔案，詳情可以參考 `bin/build.sh` 裡面做了甚麼，`sphinx-build` 主要是以此目錄當作文件來源。
+* `workspace/build` : 輸出為 epub 時，會將所有檔案儲存於此。
+
 
 ## Author
 
