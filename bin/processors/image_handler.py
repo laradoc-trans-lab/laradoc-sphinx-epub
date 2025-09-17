@@ -35,7 +35,7 @@ def process_images(content: str, image_output_dir: str) -> str:
                 image_filename = "img_" + hashlib.md5(url.encode()).hexdigest()[:10]
 
             local_image_path = os.path.join(image_output_dir, image_filename)
-            new_image_src = f"_static/laravel/{image_filename}"
+            new_image_src = f"../_static/laravel/{image_filename}"
             
             print(f"  - Found image: {url}")
             print(f"    - Downloading to: {new_image_src}")
