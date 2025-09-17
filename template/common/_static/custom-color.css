@@ -1,0 +1,97 @@
+html,body {
+  background-color: #FFFFFF;
+  color: #000000;
+  font-family: "微軟正黑體" , "Microsoft JhengHei", "SFMono-Regular", "Roboto Mono", "Noto Sans Mono CJK TC" , "華康黑體";
+
+}
+
+code,pre {
+  font-family: "Consolas", "Menlo", "Monaco", "Courier New",monospace,"微軟正黑體" , "Microsoft JhengHei", "SFMono-Regular", "Roboto Mono", "Noto Sans Mono CJK TC" , "華康黑體";
+  line-height: 110%;
+}
+
+blockquote {
+  border: #666666 solid 1px;
+  padding: 10px;
+}
+
+
+/* 程式碼高亮的區域保留一些空隙比較美觀 */
+div.highlight {
+    padding: 10px;
+    margin-bottom: 0.2em;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 90%;
+}
+
+div.highlight pre {
+  white-space: nowrap;
+  word-wrap: normal;
+}
+
+div.highlight .line {
+  display: block;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  /* border: 1px solid red; */
+}
+
+/* 針對 [tl! remove] 擴充的刪除樣式 */
+div.highlight .dll {
+  text-decoration: line-through solid black  1px;
+  background-color: #FF8888;
+}
+
+div.highlight .linenos {
+  clear: both;
+  float: left;
+  display: block;
+  /* display: inline-block; */
+  /* vertical-align: top; */
+  color: #888888;
+  width: 30px;
+  height: 16px;
+  min-width: 30px;
+  padding: 0;
+  margin: 0;
+
+  user-select: none;   /* 行號不能被滑鼠選取 */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+/* 設定斷行 */
+div.highlight .code
+{
+  display: block;
+  min-height: 16px;
+  padding: 0px;
+  margin: 0 0 0 35px;
+  margin-left: 35px;
+
+  white-space: pre-line;
+  word-break: break-word;
+  /* vertical-align: top; */
+  /* border: 1px solid red; */
+  text-align: left;
+}
+
+/* Hyread Hack : 如果是空的元素沒有高度會跑位 */
+div.highlight .empty {
+  height: 14px;
+  min-height: 14px;
+  width: 16px;
+  border: 1px solid white;
+}
+
+
+
+/* 可允許亂斷 */
+div.highlight .s1,
+div.highlight .s2
+{
+  word-break: break-all;
+}
+
