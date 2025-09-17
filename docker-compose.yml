@@ -6,9 +6,12 @@ services:
       # 使用行內定義，就省了 Dockerfile 檔案
       dockerfile_inline: |
         FROM sphinxdoc/sphinx:8.2.3
+        RUN apt-get update && apt-get install -y git && \
+            git config --global --add safe.directory /project/workspace/source
         COPY requirements.txt .
         RUN pip install -r requirements.txt
     volumes:
-      - .:/workspace
-    working_dir: /workspace
-    command: bash bin/build.sh
+      - .:/project
+    working_dir: /project
+    entrypoint: ["bash", "bin/build.sh"]
+    command: []  # 預設空參數
