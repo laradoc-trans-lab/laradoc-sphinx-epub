@@ -12,7 +12,7 @@ Laravel 官方文件的寫法若直接用 Sphinx 轉換成 EPUB 會遇到很多�
 ## 專案目錄結構介紹
 
 * `bin/preprocess_docs.py` : 可用來修復 Markdown 內的各種問題，包含自動下載圖片存放於本地端。
-* `bin/gen_index.py` : 用於動態產生目錄檔案的程式，主要依據 `documention.md` 內容產生。
+* `bin/gen_index.py` : 用於動態產生目錄檔案的程式，主要依據 `documention.md` 內容產生，轉換後會放至 `workspace/preprocess/{version}`。
 * `bin/build.sh` : 簡單的 bash 以執行 `preprocess_docs.py` 與 `sphinx-build` 建立 epub 檔案。
 * `template` : 現成的樣板。
 * `sphinx_extension` : 目前只有一個 `torchlight.py` 主要用於增強 `Pygments` 產生的結構。
