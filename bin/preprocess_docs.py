@@ -8,7 +8,8 @@
 3. Laravel Doc 特有的 diff 語法轉換
 4. 程式碼區塊註解指令處理 (`[tl! add]` 和 `[tl! remove]`)
 5. PHP 程式碼區塊標籤修正
-6. 程式碼區塊 tab 語法處理
+6. 刪除標記 `{.collection-method}`
+7. 程式碼區塊 tab 語法處理
 
 處理邏輯皆已模組化於 `processors` 目錄下。
 
@@ -25,6 +26,7 @@ from processors.link_handler import process_links
 from processors.diff_handler import process_diff_blocks
 from processors.php_tag_handler import process_php_tags
 from processors.tab_handler import process_tabs
+from processors.collection_method_handler import process_collection_methods
 
 def convert_content(source_dir: str, output_dir: str) -> None:
     """
@@ -56,6 +58,7 @@ def convert_content(source_dir: str, output_dir: str) -> None:
         content = process_links(content)
         content = process_diff_blocks(content)
         content = process_php_tags(content)
+        content = process_collection_methods(content)
         content = process_tabs(content)
         
         # --- 寫入處理後的檔案 ---
