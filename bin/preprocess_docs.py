@@ -27,6 +27,7 @@ from processors.diff_handler import process_diff_blocks
 from processors.php_tag_handler import process_php_tags
 from processors.tab_handler import process_tabs
 from processors.collection_method_handler import process_collection_methods
+from processors.admonition_handler import process_admonitions
 
 def convert_content(source_dir: str, output_dir: str) -> None:
     """
@@ -59,6 +60,7 @@ def convert_content(source_dir: str, output_dir: str) -> None:
         content = process_diff_blocks(content)
         content = process_php_tags(content)
         content = process_collection_methods(content)
+        content = process_admonitions(content)
         content = process_tabs(content)
         
         # --- 寫入處理後的檔案 ---
