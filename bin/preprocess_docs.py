@@ -22,12 +22,15 @@ import os
 
 # 從 processors 模組匯入所有處理函式
 from processors.image_handler import process_images
+from processors.base64_image_handler import process_base64_images
 from processors.link_handler import process_links
 from processors.diff_handler import process_diff_blocks
 from processors.php_tag_handler import process_php_tags
 from processors.tab_handler import process_tabs
 from processors.collection_method_handler import process_collection_methods
-from processors.admonition_handler import process_admonitions
+from processors.alert_handler import process_alerts
+# processors.admonition_handler 暫時不用，因為 E-INK 閱讀器可能不支援
+# from processors.admonition_handler import process_admonitions
 
 def convert_content(source_dir: str, output_dir: str) -> None:
     """
@@ -56,11 +59,14 @@ def convert_content(source_dir: str, output_dir: str) -> None:
         # --- 處理流程管道 ---
         # 依序呼叫各個處理器
         content = process_images(content, image_output_dir)
+        content = process_base64_images(content, image_output_dir)
         content = process_links(content)
         content = process_diff_blocks(content)
         content = process_php_tags(content)
         content = process_collection_methods(content)
-        content = process_admonitions(content)
+        content = process_alerts(content)
+        # processors.admonition_handler 暫時不用，因為 E-INK 閱讀器可能不支援
+        # content = process_admonitions(content)
         content = process_tabs(content)
         
         # --- 寫入處理後的檔案 ---
