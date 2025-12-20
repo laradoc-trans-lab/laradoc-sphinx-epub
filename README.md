@@ -2,7 +2,7 @@
 
 Laravel 官方文件的寫法若直接用 Sphinx 轉換成 EPUB 會遇到很多問題，如
 
-1. "```shell tab=Linux " 這種標籤效果，好像各轉換工具沒辦法直接處理好。
+1. `` ```shell tab=Linux `` 這種標籤效果，好像各轉換工具沒辦法直接處理好。
 2. 文件中 Markdown 使用 `<img>` 引用外部圖片，需下載回來包在 epub。
 3. 文件中 Markdown 使用 `<img>` 沒有正確的結束語法，因此無法通過 XHTML 驗證。
 4. 程式碼區塊使用的語言不被認得，例如 `blade` , 這都要額外設定修正。
@@ -12,7 +12,7 @@ Laravel 官方文件的寫法若直接用 Sphinx 轉換成 EPUB 會遇到很多�
 ## 專案目錄結構介紹
 
 * `bin/preprocess_docs.py` : 可用來修復 Markdown 內的各種問題，包含自動下載圖片存放於本地端。
-* `bin/gen_index.py` : 用於動態產生目錄檔案的程式，主要依據 `documention.md` 內容產生，轉換後會放至 `workspace/preprocess/{version}`。
+* `bin/gen_index.py` : 用於動態產生目錄(TOC)檔案的程式，主要依據 `documention.md` 內容產生，轉換後會放至 `workspace/preprocess/{version}`。
 * `bin/build.sh` : 簡單的 bash 以執行 `preprocess_docs.py` 與 `sphinx-build` 建立 epub 檔案。
 * `template` : 現成的樣板。
 * `sphinx_extension` : 目前只有一個 `torchlight.py` 主要用於增強 `Pygments` 產生的結構。
@@ -69,7 +69,7 @@ docker compose run -u $UID:$GID --rm builder 12.x
 bin/build.sh 12.x
 ```
 
-就這麼簡單，所有 Markdwon 修正與轉換為 epub 都會依照現有的目錄結構自動完成，轉換過程會有一些紅字 WARNING 不用館，如果轉換成功結束，應該可以看到幾個變化
+就這麼簡單，所有 Markdwon 修正與轉換為 epub 都會依照現有的目錄結構自動完成，轉換過程會有一些紅字 WARNING 不用理會，如果轉換成功，應該可以看到幾個變化
 
 * `workspace/source`: 這是原始文件的 git repo，此時分支應該是切換到建置 epub 時的分支。
 * `workspace/preprocess`: 預處理的檔案，詳情可以參考 `bin/build.sh` 裡面做了甚麼，`sphinx-build` 主要是以此目錄當作文件來源。
